@@ -18,3 +18,7 @@ func CopyCmd() string {
 func RemoveCmd() string {
 	return "rm -fr"
 }
+
+func MoveCmd() string {
+	return "mv"
+}

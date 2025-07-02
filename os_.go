@@ -26,3 +26,8 @@ func RemoveCmd() string {
 	PanicMsg("Platform '%s' is currently not supported right now!", runtime.GOOS)
 	return ""
 }
+
+func MoveCmd() string {
+	PanicMsg("Platform '%s' is currently not supported right now!", runtime.GOOS)
+	return ""
+}

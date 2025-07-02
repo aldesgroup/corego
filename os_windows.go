@@ -18,3 +18,7 @@ func CopyCmd() string {
 func RemoveCmd() string {
 	return "powershell -Command Remove-Item -Recurse -Force"
 }
+
+func MoveCmd() string {
+	return "powershell -Command Move-Item"
+}
