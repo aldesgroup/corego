@@ -63,8 +63,8 @@ func InSlice[V comparable](s []V, el V) bool {
 }
 
 // Generic Map function for slices
-func MapFn[T any](input []T, transform func(T) T) []T {
-	output := make([]T, len(input))
+func MapFn[T, U any](input []T, transform func(T) U) []U {
+	output := make([]U, len(input))
 	for i, v := range input {
 		output[i] = transform(v)
 	}
