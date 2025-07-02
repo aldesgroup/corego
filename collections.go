@@ -1,4 +1,4 @@
-package corego
+package core
 
 import (
 	"cmp"
