@@ -8,6 +8,8 @@ import (
 	"path"
 	"strings"
 	"time"
+
+	"gopkg.in/yaml.v2"
 )
 
 // ------------------------------------------------------------------------------------------------
@@ -113,10 +115,18 @@ func ReadFile(filename string, failIfNotExist bool) []byte {
 	return fileBytes
 }
 
-// ReadFileToJson reads the file with the given path and unmarshals the JSON object
-func ReadFileToJson[T any, Y *T](filename string, obj Y, failIfNotExist bool) Y {
+// ReadFileFromJSON reads the file with the given path and unmarshals the JSON object
+func ReadFileFromJSON[T any, Y *T](filename string, obj Y, failIfNotExist bool) Y {
 	if fileBytes := ReadFile(filename, failIfNotExist); fileBytes != nil {
 		PanicMsgIfErr(json.Unmarshal(fileBytes, obj), "Could not JSON-unmarshal file '%s'", filename)
+	}
+	return obj
+}
+
+// ReadFileFromYAML reads the file with the given path and unmarshals the YAML object
+func ReadFileFromYAML[T any, Y *T](filename string, obj Y, failIfNotExist bool) Y {
+	if fileBytes := ReadFile(filename, failIfNotExist); fileBytes != nil {
+		PanicMsgIfErr(yaml.Unmarshal(fileBytes, obj), "Could not YAML-unmarshal file '%s'", filename)
 	}
 	return obj
 }
