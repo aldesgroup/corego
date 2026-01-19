@@ -1,0 +1,3 @@
+appname: corego
+lib:
+  srcdir: .
