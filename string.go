@@ -122,3 +122,15 @@ func RandomString(length int) string {
 	// Convert the slice to a string and return
 	return string(randomString)
 }
+
+// Getting in the given content the part before the given separator
+func Before(content string, sep string) string {
+	before, _, _ := strings.Cut(content, sep)
+	return before
+}
+
+// Getting in the given content the part after the given separator
+func After(content string, sep string) string {
+	_, after, _ := strings.Cut(content, sep)
+	return after
+}

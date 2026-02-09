@@ -46,6 +46,14 @@ func EnsureDir(pathElem ...string) string {
 	return dirname
 }
 
+// EnsureReadDir is a convenient shortcut to list a directory's files and folders
+func EnsureReadDir(pathElem ...string) []os.DirEntry {
+	dirPath := path.Join(pathElem...)
+	entries, errRead := os.ReadDir(dirPath)
+	PanicMsgIfErr(errRead, "Could not read the given folder '%s'", dirPath)
+	return entries
+}
+
 // WriteToFile writes the given content to the file with the given path
 func WriteToFile(content string, filepaths ...string) {
 	// creating the file
@@ -131,11 +139,26 @@ func ReadFileFromYAML[T any, Y *T](filename string, obj Y, failIfNotExist bool) 
 	return obj
 }
 
-// ReplaceInFile replaces the given replacements in the file with the given path
+// ReplaceInFile performs the given replacements in the file with the given path
 func ReplaceInFile(filename string, replacements map[string]string) {
 	fileContent := string(ReadFile(filename, true))
 	for replace, by := range replacements {
 		fileContent = strings.ReplaceAll(fileContent, replace, by)
 	}
 	WriteStringToFile(filename, "%s", fileContent)
+}
+
+// ReplaceInFolder performs the given replacements in the files within the given folder, with the given extension
+// Example:
+//
+//	   ("src", ".go", map[string]{"foo":"bar", "toto":"titi"}) =>
+//		  replaces "boo" with "bar", and "toto" with "titi", in all the *.go files found in "./src".
+func ReplaceInFolder(folder string, extension string, replacements map[string]string) {
+	for _, entry := range EnsureReadDir(folder) {
+		if entry.IsDir() {
+			ReplaceInFolder(path.Join(folder, entry.Name()), extension, replacements)
+		} else if strings.HasSuffix(entry.Name(), extension) {
+			ReplaceInFile(path.Join(folder, entry.Name()), replacements)
+		}
+	}
 }
