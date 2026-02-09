@@ -94,6 +94,19 @@ func ToPascal(s string) string {
 	return string(unicode.ToUpper(rune(s[0]))) + s[1:]
 }
 
+// ToAcronym converts "ThisPascalName" to "TPN"
+func ToAcronym(input string) string {
+	var result []rune
+
+	for _, r := range input {
+		if unicode.IsUpper(r) {
+			result = append(result, r)
+		}
+	}
+
+	return string(result)
+}
+
 const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 // RandomString generates a random string of the given length
