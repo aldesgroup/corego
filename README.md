@@ -1,5 +1,7 @@
 # CoreGO
 
-Common library for Devotion's GO libraries &amp; tools (Goald, Aldev...).
+CoreGO is part of a framework called [Devotion](https://aldesgroup.github.io/devotion) and is documented [there](https://aldesgroup.github.io/devotion/docs/corego/).
 
-Mainly utility functions around handling files, collections, strings, etc.
+## License
+
+This project is licensed under the terms of the license included in the repository.
