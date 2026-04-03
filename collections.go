@@ -70,3 +70,23 @@ func MapFn[T, U any](input []T, transform func(T) U) []U {
 	}
 	return output
 }
+
+// Tells if two slices are identical; works for primitive slices, but probably not object slices
+func SlicesEquals[T cmp.Ordered](slice1, slice2 []T, sortedAlready bool) bool {
+	if len(slice1) != len(slice2) {
+		return false
+	}
+
+	if !sortedAlready {
+		slices.Sort(slice1)
+		slices.Sort(slice2)
+	}
+
+	for i := 0; i < len(slice1); i++ {
+		if slice1[i] != slice2[i] {
+			return false
+		}
+	}
+
+	return true
+}
