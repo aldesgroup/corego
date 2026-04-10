@@ -51,6 +51,19 @@ func GetFirstMapValue[K cmp.Ordered, V any](m map[K]V) (value V) {
 	return
 }
 
+// AddToMap returns the first map with the elements of the second map added to it
+func AddToMap[K cmp.Ordered, V any, M map[K]V](m1, m2 M) M {
+	for key, val := range m2 {
+		m1[key] = val
+	}
+
+	return m1
+}
+
+// ------------------------------------------------------------------------------------------------
+// Slices
+// ------------------------------------------------------------------------------------------------
+
 // InSlice returns true if the slice s contains the given element el
 func InSlice[V comparable](s []V, el V) bool {
 	for _, val := range s {
