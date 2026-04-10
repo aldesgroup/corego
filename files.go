@@ -162,3 +162,29 @@ func ReplaceInFolder(folder string, extension string, replacements map[string]st
 		}
 	}
 }
+
+// Function to scan a file given by its filename, and returning the first line verifying the given predicate,
+// and its index, starting from 1
+func FindLineInFile(filename string, predicate func(line string) bool, trimResult bool) (string, int) {
+	for i, line := range strings.Split(string(ReadFile(filename, true)), "\n") {
+		if predicate(line) {
+			if trimResult {
+				return strings.TrimSpace(line), i + 1
+			}
+			return line, i + 1
+		}
+	}
+
+	return "", 0
+}
+
+// Returns the line (and its index) from a file that start with a given argument;
+// The result may be returned with the argument being cut, if cut = true
+func FindLineInFileStartingWith(filename string, startsWith string, trimResult bool, cutStart bool) (string, int) {
+	predicate := func(line string) bool { return strings.HasPrefix(strings.TrimSpace(line), startsWith) }
+	line, index := FindLineInFile(filename, predicate, trimResult || cutStart)
+	if index > 0 && cutStart {
+		return line[len(startsWith):], index
+	}
+	return line, index
+}
