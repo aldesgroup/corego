@@ -63,6 +63,7 @@ func KebabToPascal(s string) string {
 }
 
 // PascalToCamel converts a PascalCase string to camelCase.
+// Acronyms are title-cased: DeviceID → deviceId, URLParser → urlParser.
 func PascalToCamel(s string) string {
 	runes := []rune(s)
 	size := len(runes)
@@ -71,18 +72,34 @@ func PascalToCamel(s string) string {
 		return s
 	}
 
-	result := []rune{unicode.ToLower(runes[0])}
-
-	var i int
-	for i = 1; i < size; i++ {
-		if unicode.IsLower(runes[i]) || i < size-1 && unicode.IsUpper(runes[i]) && unicode.IsLower(runes[i+1]) {
-			break
+	// Split into words at each uppercase letter that starts a new word:
+	// - lowercase→uppercase transition (e.g. "Device|Name")
+	// - uppercase+uppercase→lowercase transition (e.g. "URL|Parser", "Device|ID|s")
+	var words [][]rune
+	start := 0
+	for i := 1; i < size; i++ {
+		if unicode.IsUpper(runes[i]) {
+			if unicode.IsLower(runes[i-1]) || (i+1 < size && unicode.IsLower(runes[i+1]) && unicode.IsUpper(runes[i-1])) {
+				words = append(words, runes[start:i])
+				start = i
+			}
 		}
+	}
+	words = append(words, runes[start:])
 
-		result = append(result, unicode.ToLower(runes[i]))
+	// First word: all lowercase; subsequent words: title case (first upper, rest lower).
+	var result []rune
+	for j, w := range words {
+		for k, r := range w {
+			if j == 0 || k > 0 {
+				result = append(result, unicode.ToLower(r))
+			} else {
+				result = append(result, unicode.ToUpper(r))
+			}
+		}
 	}
 
-	return string(result) + string(runes[i:size])
+	return string(result)
 }
 
 // ToPascal converts string to PascalCase

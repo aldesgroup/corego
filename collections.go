@@ -2,7 +2,9 @@ package core
 
 import (
 	"cmp"
+	"fmt"
 	"slices"
+	"strings"
 )
 
 // ------------------------------------------------------------------------------------------------
@@ -60,6 +62,28 @@ func AddToMap[K cmp.Ordered, V any, M map[K]V](m1, m2 M) M {
 	return m1
 }
 
+// MapToString returns a string representation of the map, with each key-value pair formatted as "key<keyValSep>value" and pairs separated by "pairSep"
+func MapToString[MK cmp.Ordered, MV any](m map[MK]MV, sortedKeys bool, keyValSep, pairSep string) string {
+	var sb strings.Builder
+	if sortedKeys {
+		keys := GetSortedKeys(m)
+		for _, key := range keys {
+			if sb.Len() > 0 {
+				sb.WriteString(pairSep)
+			}
+			sb.WriteString(fmt.Sprintf("%v%s%v", key, keyValSep, m[key]))
+		}
+	} else {
+		for key, val := range m {
+			if sb.Len() > 0 {
+				sb.WriteString(pairSep)
+			}
+			sb.WriteString(fmt.Sprintf("%v%s%v", key, keyValSep, val))
+		}
+	}
+	return sb.String()
+}
+
 // ------------------------------------------------------------------------------------------------
 // Slices
 // ------------------------------------------------------------------------------------------------
@@ -102,4 +126,11 @@ func SlicesEquals[T cmp.Ordered](slice1, slice2 []T, sortedAlready bool) bool {
 	}
 
 	return true
+}
+
+func ToAnySlice[T any](source []T) (target []any) {
+	for _, s := range source {
+		target = append(target, s)
+	}
+	return target
 }
