@@ -84,6 +84,16 @@ func MapToString[MK cmp.Ordered, MV any](m map[MK]MV, sortedKeys bool, keyValSep
 	return sb.String()
 }
 
+// Reverse returns a new map with keys and values swapped.
+// Note that if the original map has duplicate values, only one of the corresponding keys will be present in the reversed map.
+func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
+	reversed := make(map[V]K)
+	for key, val := range m {
+		reversed[val] = key
+	}
+	return reversed
+}
+
 // ------------------------------------------------------------------------------------------------
 // Slices
 // ------------------------------------------------------------------------------------------------
