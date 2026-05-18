@@ -23,7 +23,7 @@ func GetSortedKeys[K cmp.Ordered, V any](m map[K]V) (keys []K) {
 	return
 }
 
-// GetSortedKeys returns a sorted slice of values from a map.
+// GetSortedValues returns a sorted slice of values from a map, the order of values corresponding to the order of sorted keys.
 // K must be a comparable type, which is a constraint satisfied by all types that can be map keys.
 func GetSortedValues[K cmp.Ordered, V any](m map[K]V) (values []V) {
 	for _, key := range GetSortedKeys(m) {
