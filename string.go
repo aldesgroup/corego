@@ -79,7 +79,7 @@ func PascalToCamel(s string) string {
 	start := 0
 	for i := 1; i < size; i++ {
 		if unicode.IsUpper(runes[i]) {
-			if unicode.IsLower(runes[i-1]) || (i+1 < size && unicode.IsLower(runes[i+1]) && unicode.IsUpper(runes[i-1])) {
+			if unicode.IsLower(runes[i-1]) || (i+1 < size && unicode.IsLower(runes[i+1]) && unicode.IsUpper(runes[i-1])) || unicode.IsDigit(runes[i-1]) {
 				words = append(words, runes[start:i])
 				start = i
 			}

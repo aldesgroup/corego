@@ -31,4 +31,5 @@ func TestPascalToCamel(t *testing.T) {
 	assert.Equal(t, "deviceIdString", PascalToCamel("DeviceIDString"))
 	assert.Equal(t, "rawJsonName", PascalToCamel("RawJSONName"))
 	assert.Equal(t, "defaultHttpError", PascalToCamel("DefaultHTTPError"))
+	assert.Equal(t, "branch1Type", PascalToCamel("Branch1Type"))
 }
