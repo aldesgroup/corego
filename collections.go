@@ -94,6 +94,28 @@ func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
 	return reversed
 }
 
+// GetValueFromMap returns a value from the map based on the provided path of keys. If any key in the path does not exist, it returns the zero value of V.
+func GetValueFromMap(m map[string]any, key string, moreKeys ...string) any {
+	if len(moreKeys) == 0 {
+		return m[key]
+	}
+
+	if _, exists := m[key]; exists {
+		switch nestedMap := any(m[key]).(type) {
+		case map[string]any:
+			if len(moreKeys) == 1 {
+				return GetValueFromMap(nestedMap, moreKeys[0])
+			}
+			return GetValueFromMap(nestedMap, moreKeys[0], moreKeys[1:]...)
+		default:
+			panic("The value at key '" + key + "' is not a map[string]any, cannot access further keys.")
+		}
+	}
+
+	// should not happen
+	panic("Key '" + key + "' does not exist in the map.")
+}
+
 // ------------------------------------------------------------------------------------------------
 // Slices
 // ------------------------------------------------------------------------------------------------
