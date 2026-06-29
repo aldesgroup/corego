@@ -151,3 +151,12 @@ func After(content string, sep string) string {
 	_, after, _ := strings.Cut(content, sep)
 	return after
 }
+
+// PadRight pads the given string with spaces on the right to reach the specified width
+func PadRight(s string, width int, with string) string {
+	if len(s) >= width {
+		return s
+	}
+
+	return s + strings.Repeat(with, width-len(s))
+}
