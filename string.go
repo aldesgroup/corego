@@ -8,7 +8,7 @@ import (
 )
 
 // ------------------------------------------------------------------------------------------------
-// Strings
+// Case-changing functions
 // ------------------------------------------------------------------------------------------------
 
 // pascalToSeparated converts a PascalCase string to seperated case like kebab-case or snake_case
@@ -25,6 +25,9 @@ func pascalToSeparated(s string, sep rune) string {
 				buffer.WriteRune(sep)
 			}
 			buffer.WriteRune(unicode.ToLower(r))
+		} else if unicode.IsDigit(r) && i > 0 && unicode.IsLetter(rune(s[i-1])) {
+			buffer.WriteRune(sep)
+			buffer.WriteRune(r)
 		} else {
 			buffer.WriteRune(r)
 		}
@@ -111,6 +114,10 @@ func ToPascal(s string) string {
 	return string(unicode.ToUpper(rune(s[0]))) + s[1:]
 }
 
+// ----------------------------------------------------------------------------
+// Misc
+// ----------------------------------------------------------------------------
+
 // ToAcronym converts "ThisPascalName" to "TPN"
 func ToAcronym(input string) string {
 	var result []rune
@@ -140,6 +147,22 @@ func RandomString(length int) string {
 	return string(randomString)
 }
 
+func PascalToShort(pascalCasedString string) (result string) {
+	for _, bit := range strings.Split(pascalToSeparated(pascalCasedString, '.'), ".") {
+		bit = ToPascal(strings.ToLower(bit))
+		if len(bit) > 3 {
+			bit = bit[:3]
+		}
+		result += bit
+	}
+
+	return
+}
+
+// ----------------------------------------------------------------------------
+// Substrings
+// ----------------------------------------------------------------------------
+
 // Getting in the given content the part before the given separator
 func Before(content string, sep string) string {
 	before, _, _ := strings.Cut(content, sep)
@@ -151,6 +174,10 @@ func After(content string, sep string) string {
 	_, after, _ := strings.Cut(content, sep)
 	return after
 }
+
+// ----------------------------------------------------------------------------
+// Padding strings
+// ----------------------------------------------------------------------------
 
 // PadRight pads the given string with spaces on the right to reach the specified width
 func PadRight(s string, width int, with string) string {
