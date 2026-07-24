@@ -47,3 +47,13 @@ func TestPascalToShort(t *testing.T) {
 	assert.Equal(t, "Bra1Typ", PascalToShort("Branch1Type"))
 	assert.Equal(t, "RanAccMem", PascalToShort("RandomAccessMemory"))
 }
+
+func TestElude(t *testing.T) {
+	assert.Equal(t, "Hello World", Elude("Hello World", 20))
+	assert.Equal(t, "Hell (...)", Elude("Hello World", 10))
+	assert.Equal(t, "Hello (...)", Elude("Hello World", 11))
+	assert.Equal(t, "Hello  (...)", Elude("Hello World", 12))
+	assert.Equal(t, "Hello W (...)", Elude("Hello World", 13))
+	assert.Equal(t, "Hello Wo (...)", Elude("Hello World", 14))
+	assert.Equal(t, "Hello Wor (...)", Elude("Hello World", 15))
+}

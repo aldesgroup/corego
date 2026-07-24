@@ -175,6 +175,18 @@ func After(content string, sep string) string {
 	return after
 }
 
+const eludedSuffix = " (...)"
+const eludedSuffixLen = len(eludedSuffix)
+
+// Elude returns the given content, but eludes it with "..." if it is longer than the given maxLength
+func Elude(content string, maxLength int) string {
+	if len(content) <= maxLength-eludedSuffixLen {
+		return content
+	}
+
+	return content[:maxLength-eludedSuffixLen] + eludedSuffix
+}
+
 // ----------------------------------------------------------------------------
 // Padding strings
 // ----------------------------------------------------------------------------
