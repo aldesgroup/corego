@@ -65,6 +65,16 @@ func KebabToPascal(s string) string {
 	return separatedToPascal(s, "-")
 }
 
+// SnakeToPascal converts a snake_case string to PascalCase
+func SnakeToPascal(s string) string {
+	return separatedToPascal(s, "_")
+}
+
+// SnakeToCamel converts a snake_case string to camelCase
+func SnakeToCamel(s string) string {
+	return PascalToCamel(SnakeToPascal(s))
+}
+
 // PascalToCamel converts a PascalCase string to camelCase.
 // Acronyms are title-cased: DeviceID → deviceId, URLParser → urlParser.
 func PascalToCamel(s string) string {

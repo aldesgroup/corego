@@ -57,3 +57,42 @@ func TestElude(t *testing.T) {
 	assert.Equal(t, "Hello Wo (...)", Elude("Hello World", 14))
 	assert.Equal(t, "Hello Wor (...)", Elude("Hello World", 15))
 }
+
+func TestKebabToPascal(t *testing.T) {
+	assert.Equal(t, "UrlPatTes", KebabToPascal("url-pat-tes"))
+	assert.Equal(t, "HelWor", KebabToPascal("hel-wor"))
+	assert.Equal(t, "Id", KebabToPascal("id"))
+	assert.Equal(t, "DevId", KebabToPascal("dev-id"))
+	assert.Equal(t, "DevIds", KebabToPascal("dev-ids"))
+	assert.Equal(t, "DevIdStr", KebabToPascal("dev-id-str"))
+	assert.Equal(t, "RawJsoNam", KebabToPascal("raw-jso-nam"))
+	assert.Equal(t, "DefHttErr", KebabToPascal("def-htt-err"))
+	assert.Equal(t, "Bra1Typ", KebabToPascal("bra-1-typ"))
+	assert.Equal(t, "RanAccMem", KebabToPascal("ran-acc-mem"))
+}
+
+func TestSnakeToPascal(t *testing.T) {
+	assert.Equal(t, "UrlPatTes", SnakeToPascal("url_pat_tes"))
+	assert.Equal(t, "HelWor", SnakeToPascal("hel_wor"))
+	assert.Equal(t, "Id", SnakeToPascal("id"))
+	assert.Equal(t, "DevId", SnakeToPascal("dev_id"))
+	assert.Equal(t, "DevIds", SnakeToPascal("dev_ids"))
+	assert.Equal(t, "DevIdStr", SnakeToPascal("dev_id_str"))
+	assert.Equal(t, "RawJsoNam", SnakeToPascal("raw_jso_nam"))
+	assert.Equal(t, "DefHttErr", SnakeToPascal("def_htt_err"))
+	assert.Equal(t, "Bra1Typ", SnakeToPascal("bra_1_typ"))
+	assert.Equal(t, "RanAccMem", SnakeToPascal("ran_acc_mem"))
+}
+
+func TestSnakeToCamel(t *testing.T) {
+	assert.Equal(t, "urlPatTes", SnakeToCamel("url_pat_tes"))
+	assert.Equal(t, "helWor", SnakeToCamel("hel_wor"))
+	assert.Equal(t, "id", SnakeToCamel("id"))
+	assert.Equal(t, "devId", SnakeToCamel("dev_id"))
+	assert.Equal(t, "devIds", SnakeToCamel("dev_ids"))
+	assert.Equal(t, "devIdStr", SnakeToCamel("dev_id_str"))
+	assert.Equal(t, "rawJsoNam", SnakeToCamel("raw_jso_nam"))
+	assert.Equal(t, "defHttErr", SnakeToCamel("def_htt_err"))
+	assert.Equal(t, "bra1Typ", SnakeToCamel("bra_1_typ"))
+	assert.Equal(t, "ranAccMem", SnakeToCamel("ran_acc_mem"))
+}
