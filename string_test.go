@@ -96,3 +96,21 @@ func TestSnakeToCamel(t *testing.T) {
 	assert.Equal(t, "bra1Typ", SnakeToCamel("bra_1_typ"))
 	assert.Equal(t, "ranAccMem", SnakeToCamel("ran_acc_mem"))
 }
+
+func TestPadLeft(t *testing.T) {
+	assert.Equal(t, "     Hello", PadLeft("Hello", 10, " "))
+	assert.Equal(t, "Hello", PadLeft("Hello", 5, " "))
+	assert.Equal(t, "Hello", PadLeft("Hello", 3, " "))
+	assert.Equal(t, "00000Hello", PadLeft("Hello", 10, "0"))
+	assert.Equal(t, "Hello", PadLeft("Hello", 5, "0"))
+	assert.Equal(t, "Hello", PadLeft("Hello", 3, "0"))
+}
+
+func TestPadRight(t *testing.T) {
+	assert.Equal(t, "Hello     ", PadRight("Hello", 10, " "))
+	assert.Equal(t, "Hello", PadRight("Hello", 5, " "))
+	assert.Equal(t, "Hello", PadRight("Hello", 3, " "))
+	assert.Equal(t, "Hello00000", PadRight("Hello", 10, "0"))
+	assert.Equal(t, "Hello", PadRight("Hello", 5, "0"))
+	assert.Equal(t, "Hello", PadRight("Hello", 3, "0"))
+}

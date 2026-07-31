@@ -209,3 +209,12 @@ func PadRight(s string, width int, with string) string {
 
 	return s + strings.Repeat(with, width-len(s))
 }
+
+// PadLeft pads the given string with spaces on the left to reach the specified width
+func PadLeft(s string, width int, with string) string {
+	if len(s) >= width {
+		return s
+	}
+
+	return strings.Repeat(with, width-len(s)) + s
+}
