@@ -11,6 +11,9 @@ import (
 
 // StringToBool converts a string to a boolean
 func StringToBool(valueAsString, context string) bool {
+	if valueAsString == "" {
+		return false
+	}
 	value, errConv := strconv.ParseBool(valueAsString)
 	PanicMsgIfErr(errConv, "'%s' is not a right bool value for context '%s'", valueAsString, context)
 	return value
@@ -28,6 +31,9 @@ func StringToDate(valueAsString, context string) *time.Time {
 
 // StringToInt64 converts a string to a int64
 func StringToInt64(valueAsString, context string) int64 {
+	if valueAsString == "" {
+		return 0
+	}
 	value, errConv := strconv.ParseInt(valueAsString, 10, 64)
 	PanicMsgIfErr(errConv, "'%s' is not a right int64 value for context '%s'", valueAsString, context)
 	return value
@@ -35,6 +41,9 @@ func StringToInt64(valueAsString, context string) int64 {
 
 // StringToInt converts a string to a int
 func StringToInt(valueAsString, context string) int {
+	if valueAsString == "" {
+		return 0
+	}
 	value, errConv := strconv.Atoi(valueAsString)
 	PanicMsgIfErr(errConv, "'%s' is not a right int value for context '%s'", valueAsString, context)
 	return value
@@ -42,6 +51,9 @@ func StringToInt(valueAsString, context string) int {
 
 // StringToFloat32 converts a string to a float32
 func StringToFloat32(valueAsString, context string) float32 {
+	if valueAsString == "" {
+		return 0
+	}
 	value, errConv := strconv.ParseFloat(valueAsString, 32)
 	PanicMsgIfErr(errConv, "'%s' is not a right float32 value for context '%s'", valueAsString, context)
 	return float32(value)
@@ -49,6 +61,9 @@ func StringToFloat32(valueAsString, context string) float32 {
 
 // StringToFloat64 converts a string to a float64
 func StringToFloat64(valueAsString, context string) float64 {
+	if valueAsString == "" {
+		return 0
+	}
 	value, errConv := strconv.ParseFloat(valueAsString, 64)
 	PanicMsgIfErr(errConv, "'%s' is not a right float64 value for context '%s'", valueAsString, context)
 	return value
