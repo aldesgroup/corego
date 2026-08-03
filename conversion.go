@@ -18,6 +18,9 @@ func StringToBool(valueAsString, context string) bool {
 
 // StringToDate converts a string to a date
 func StringToDate(valueAsString, context string) *time.Time {
+	if valueAsString == "" {
+		return nil
+	}
 	value, errConv := time.Parse(RFC3339Milli, valueAsString)
 	PanicMsgIfErr(errConv, "'%s' is not a right date value for context '%s'", valueAsString, context)
 	return &value
@@ -58,6 +61,9 @@ func BoolToString(value bool) string {
 
 // DateToString converts a date to a string
 func DateToString(value *time.Time) string {
+	if value == nil {
+		return ""
+	}
 	return value.Format(RFC3339Milli)
 }
 
