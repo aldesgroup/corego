@@ -218,3 +218,16 @@ func PadLeft(s string, width int, with string) string {
 
 	return strings.Repeat(with, width-len(s)) + s
 }
+
+// ----------------------------------------------------------------------------
+// Converting strings
+// ----------------------------------------------------------------------------
+
+// function that takes a slice of string-derived values and converts them to a slice of strings
+func ToStrings[STRTYP ~string](values []STRTYP) []string {
+	result := make([]string, len(values))
+	for i, v := range values {
+		result[i] = string(v)
+	}
+	return result
+}
