@@ -54,8 +54,8 @@ func EnsureReadDir(pathElem ...string) []os.DirEntry {
 	return entries
 }
 
-// WriteToFile writes the given content to the file with the given path
-func WriteToFile(content string, filepaths ...string) {
+// doWriteToFile writes the given content to the file with the given path
+func doWriteToFile(content string, makeNew bool, filepaths ...string) {
 	// creating the file
 	fileName := path.Join(filepaths...)
 
@@ -65,8 +65,15 @@ func WriteToFile(content string, filepaths ...string) {
 	}
 
 	// creating the file
-	file, errCreate := os.Create(fileName)
-	PanicMsgIfErr(errCreate, "Could not create file %s", fileName)
+	var file *os.File
+	var errFile error
+	if makeNew {
+		file, errFile = os.Create(fileName)
+		PanicMsgIfErr(errFile, "Could not create file %s", fileName)
+	} else {
+		file, errFile = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0o644)
+		PanicMsgIfErr(errFile, "Could not open file %s", fileName)
+	}
 
 	// ensuring we've got no leak
 	defer func() {
@@ -80,6 +87,16 @@ func WriteToFile(content string, filepaths ...string) {
 	if _, errWrite := file.WriteString(content); errWrite != nil {
 		PanicMsgIfErr(errWrite, "Could not write file '%s'", fileName)
 	}
+}
+
+// WriteToFile writes the given content to the file with the given path, recreating it if it already exists
+func WriteToFile(content string, filepaths ...string) {
+	doWriteToFile(content, true, filepaths...)
+}
+
+// AppendToFile appends the given content to the file with the given path, creating it if it does not exist
+func AppendToFile(content string, filepaths ...string) {
+	doWriteToFile(content, false, filepaths...)
 }
 
 // EnsureNoDir removes the directory with the given path elements
