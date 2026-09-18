@@ -14,6 +14,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestPascalToNatural(t *testing.T) {
+	assert.Equal(t, "url pattern test", PascalToNatural("URLPatternTest"))
+	assert.Equal(t, "hello world", PascalToNatural("HelloWorld"))
+	assert.Equal(t, "hello_world", PascalToNatural("hello_world"))
+	assert.Equal(t, "id", PascalToNatural("ID"))
+	assert.Equal(t, "raw json name", PascalToNatural("RawJSONName"))
+	assert.Equal(t, "raw json name 1", PascalToNatural("RawJSONName1"))
+}
 func TestPascalToSnake(t *testing.T) {
 	assert.Equal(t, "url_pattern_test", PascalToSnake("URLPatternTest"))
 	assert.Equal(t, "hello_world", PascalToSnake("HelloWorld"))

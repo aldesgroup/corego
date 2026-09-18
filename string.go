@@ -36,6 +36,11 @@ func pascalToSeparated(s string, sep rune) string {
 	return buffer.String()
 }
 
+// PascalToNatural converts a PascalCase string to pascal case
+func PascalToNatural(s string) string {
+	return pascalToSeparated(s, ' ')
+}
+
 // PascalToKebab converts a PascalCase string to kebab-case.
 func PascalToKebab(s string) string {
 	return pascalToSeparated(s, '-')
