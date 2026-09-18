@@ -71,7 +71,7 @@ func doWriteToFile(content string, makeNew bool, filepaths ...string) {
 		file, errFile = os.Create(fileName)
 		PanicMsgIfErr(errFile, "Could not create file %s", fileName)
 	} else {
-		file, errFile = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0o644)
+		file, errFile = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0o644)
 		PanicMsgIfErr(errFile, "Could not open file %s", fileName)
 	}
 
