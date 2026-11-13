@@ -25,7 +25,7 @@ func pascalToSeparated(s string, sep rune) string {
 				buffer.WriteRune(sep)
 			}
 			buffer.WriteRune(unicode.ToLower(r))
-		} else if unicode.IsDigit(r) && i > 0 && unicode.IsLetter(rune(s[i-1])) {
+		} else if unicode.IsDigit(r) && i > 0 && unicode.IsLetter(rune(s[i-1])) && !digitsContinueWord(s[i:]) {
 			buffer.WriteRune(sep)
 			buffer.WriteRune(r)
 		} else {
@@ -34,6 +34,14 @@ func pascalToSeparated(s string, sep rune) string {
 	}
 
 	return buffer.String()
+}
+
+// digitsContinueWord tells whether the leading run of digits in s is directly followed by a lowercase letter,
+// meaning the digits are part of a word (e.g. "b2b") rather than a standalone number (e.g. "Branch1Type")
+func digitsContinueWord(s string) bool {
+	rest := strings.TrimLeftFunc(s, unicode.IsDigit)
+
+	return rest != "" && unicode.IsLower([]rune(rest)[0])
 }
 
 // PascalToNatural converts a PascalCase string to pascal case

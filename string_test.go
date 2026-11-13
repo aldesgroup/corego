@@ -77,6 +77,10 @@ func TestKebabToPascal(t *testing.T) {
 	assert.Equal(t, "DefHttErr", KebabToPascal("def-htt-err"))
 	assert.Equal(t, "Bra1Typ", KebabToPascal("bra-1-typ"))
 	assert.Equal(t, "RanAccMem", KebabToPascal("ran-acc-mem"))
+	assert.Equal(t, "B2bUserProfile", KebabToPascal("b2b-user-profile"))
+	assert.Equal(t, "b2b-user-profile", PascalToKebab(KebabToPascal("b2b-user-profile")))
+	assert.Equal(t, "B2bUserProfile", KebabToPascal(PascalToKebab("B2bUserProfile")))
+
 }
 
 func TestSnakeToPascal(t *testing.T) {
