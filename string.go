@@ -4,7 +4,12 @@ import (
 	"bytes"
 	"math/rand"
 	"strings"
+	"sync"
 	"unicode"
+
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 // ------------------------------------------------------------------------------------------------
@@ -243,4 +248,89 @@ func ToStrings[STRTYP ~string](values []STRTYP) []string {
 		result[i] = string(v)
 	}
 	return result
+}
+
+//------------------------------------------------------------------------------
+// Normalization functions
+//------------------------------------------------------------------------------
+
+// IStringNormalizer defines the functions our string normalizer should expose
+type IStringNormalizer interface {
+	// basic normalization function: "Yoùr Śtring šđčćžŠĐČĆŽ Ötzi's Nationalität èàì" => "Your String sđcczSĐCCZ Otzi's Nationalitat eai"
+	String(str string) (result string, err error)
+	// normalizes and capitalizes: Jean-Vincent Placé => JEAN-VINCENT PLACE
+	ToUpper(str string) (result string, err error)
+}
+
+// will implement IStringNormalizer
+type stringNormalizer struct {
+	transformer transform.Transformer
+}
+
+// String : IStringNormalizer implementation
+func (thisNormalizer *stringNormalizer) String(str string) (result string, err error) {
+	result, _, err = transform.String(thisNormalizer.transformer, str)
+
+	return result, err
+}
+
+// ToUpper : IStringNormalizer implementation
+func (thisNormalizer *stringNormalizer) ToUpper(str string) (result string, err error) {
+	result, err = thisNormalizer.String(str)
+	if err != nil {
+		return str, err
+	}
+
+	return strings.ToUpper(result), nil
+}
+
+// normalizerPool holds reusable normalizers: a normalizer is stateful, so it must never be shared
+// between goroutines at the same time, but it can be reused sequentially
+var normalizerPool = sync.Pool{
+	New: func() any {
+		return &stringNormalizer{
+			transformer: transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC),
+		}
+	},
+}
+
+// AcquireStringNormalizer pulls a string normalizer from a pool, along with the function releasing it back to the pool.
+// Use it to normalize several strings with the same normalizer:
+//
+//	normalizer, release := AcquireStringNormalizer()
+//	defer release()
+//
+// The normalizer is NOT thread-safe, and must not be used anymore once released.
+func AcquireStringNormalizer() (normalizer IStringNormalizer, release func()) {
+	pooled := normalizerPool.Get().(*stringNormalizer)
+	var once sync.Once
+
+	return pooled, func() { once.Do(func() { normalizerPool.Put(pooled) }) }
+}
+
+// WithStringNormalizer runs the given function with a pooled normalizer, released when the function returns.
+func WithStringNormalizer(fn func(normalizer IStringNormalizer)) {
+	normalizer, release := AcquireStringNormalizer()
+	defer release()
+
+	fn(normalizer)
+}
+
+// NormalizeStringOnce removes accents from a given string, using a pooled normalizer.
+// Example: "Yoùr Śtring šđčćžŠĐČĆŽ Ötzi's Nationalität èàì" => "Your String sđcczSĐCCZ Otzi's Nationalitat eai"
+// For multiple successive calls, it is recommended to use AcquireStringNormalizer and call String on the same normalizer.
+func NormalizeStringOnce(str string) (result string, err error) {
+	normalizer, release := AcquireStringNormalizer()
+	defer release()
+
+	return normalizer.String(str)
+}
+
+// NormalizeAndCapOnce normalizes and upper caps a given string, using a pooled normalizer. I.e. Jean-Vincent Placé => JEAN-VINCENT PLACE
+// For multiple successive calls, it is recommended to use AcquireStringNormalizer and call ToUpper on the same normalizer.
+func NormalizeAndCapOnce(str string) (result string, err error) {
+	normalizer, release := AcquireStringNormalizer()
+	defer release()
+
+	return normalizer.ToUpper(str)
 }

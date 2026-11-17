@@ -9,6 +9,7 @@
 package core
 
 import (
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -125,4 +126,38 @@ func TestPadRight(t *testing.T) {
 	assert.Equal(t, "Hello00000", PadRight("Hello", 10, "0"))
 	assert.Equal(t, "Hello", PadRight("Hello", 5, "0"))
 	assert.Equal(t, "Hello", PadRight("Hello", 3, "0"))
+}
+
+func TestStringNormalizerPool(t *testing.T) {
+	result, err := NormalizeStringOnce("à cet élève n°8 ce résumé est ôté sur l'îlot")
+	assert.NoError(t, err)
+	assert.Equal(t, "a cet eleve n°8 ce resume est ote sur l'ilot", result)
+
+	result, err = NormalizeAndCapOnce("Jean-Vincent Placé")
+	assert.NoError(t, err)
+	assert.Equal(t, "JEAN-VINCENT PLACE", result)
+
+	// several strings with the same normalizer
+	normalizer, release := AcquireStringNormalizer()
+	defer release()
+	for in, expected := range map[string]string{"éé": "ee", "àà": "aa", "îî": "ii"} {
+		out, err := normalizer.String(in)
+		assert.NoError(t, err)
+		assert.Equal(t, expected, out)
+	}
+
+	// concurrent one-shot usage (meant to be run with -race)
+	var wg sync.WaitGroup
+	for i := 0; i < 50; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			WithStringNormalizer(func(n IStringNormalizer) {
+				out, err := n.ToUpper("Placé")
+				assert.NoError(t, err)
+				assert.Equal(t, "PLACE", out)
+			})
+		}()
+	}
+	wg.Wait()
 }
