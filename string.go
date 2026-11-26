@@ -188,7 +188,7 @@ func PascalToShort(pascalCasedString string) (result string) {
 }
 
 // ----------------------------------------------------------------------------
-// Substrings
+// Substrings / trimming
 // ----------------------------------------------------------------------------
 
 // Getting in the given content the part before the given separator
@@ -203,6 +203,18 @@ func After(content string, sep string) string {
 	return after
 }
 
+// Remove from the content all occurrences of the given substrings
+func Clean(content string, rem ...string) string {
+	for _, r := range rem {
+		content = strings.ReplaceAll(content, r, "")
+	}
+	return content
+}
+
+// ----------------------------------------------------------------------------
+// Padding strings
+// ----------------------------------------------------------------------------
+
 const eludedSuffix = " (...)"
 const eludedSuffixLen = len(eludedSuffix)
 
@@ -214,10 +226,6 @@ func Elude(content string, maxLength int) string {
 
 	return content[:maxLength-eludedSuffixLen] + eludedSuffix
 }
-
-// ----------------------------------------------------------------------------
-// Padding strings
-// ----------------------------------------------------------------------------
 
 // PadRight pads the given string with spaces on the right to reach the specified width
 func PadRight(s string, width int, with string) string {
